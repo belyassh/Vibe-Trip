@@ -117,16 +117,11 @@ main,
   margin-right: auto;
 }
 
-.brand-mark {
-  width: 2.2rem;
-  height: 2.2rem;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--brand), #13a995);
-  color: white;
-  display: grid;
-  place-items: center;
-  font-family: "Unbounded", sans-serif;
-  font-size: 0.8rem;
+.brand-logo {
+  width: 2.4rem;
+  height: 2.4rem;
+  object-fit: contain;
+  display: block;
 }
 
 .brand-text {
