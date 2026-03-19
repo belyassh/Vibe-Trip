@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vibe Trip | Экскурсии у моря</title>
+    <meta
+      name="description"
+      content="Интерактивная витрина экскурсий: выбирайте тур, смотрите фото, считайте стоимость и отправляйте заявку в Telegram."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles/main.css" />
+  </head>
+  <body>
+    <div class="bg-shapes" aria-hidden="true">
+      <span class="shape shape-a"></span>
+      <span class="shape shape-b"></span>
+      <span class="shape shape-c"></span>
+    </div>
+
+    <header class="site-header">
+      <a class="brand" href="#home" aria-label="На главную Vibe Trip">
+        <span class="brand-mark">VT</span>
+        <span class="brand-text">Vibe Trip</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Главная навигация">
+        <a href="#catalog">Витрина</a>
+        <a href="#request">Заявка</a>
+        <a href="#contacts">Контакты</a>
+      </nav>
+
+      <a class="btn btn-ghost" href="#request">Оставить заявку</a>
+    </header>
+
+    <main>
+      <section class="hero" id="home">
+        <p class="kicker">Экскурсионное агентство</p>
+        <h1>Путешествия, которые хочется сохранить в галерее и в памяти</h1>
+        <p class="hero-copy">
+          Выберите экскурсию, изучите детали в интерактивной карточке, рассчитайте итоговую стоимость и отправьте заявку менеджеру в Telegram за пару шагов.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#catalog">Смотреть экскурсии</a>
+          <a class="btn btn-ghost" href="#request">Рассчитать стоимость</a>
+        </div>
+      </section>
+
+      <section class="catalog" id="catalog">
+        <div class="section-head">
+          <h2>Интерактивные витрины экскурсий</h2>
+          <p>Добавляйте, редактируйте и удаляйте экскурсии только в JSON.</p>
+        </div>
+
+        <div class="catalog-controls">
+          <label class="field">
+            <span>Поиск экскурсии</span>
+            <input id="searchInput" type="search" placeholder="Например: яхта, каньон, закат" />
+          </label>
+
+          <label class="field">
+            <span>Фильтр по направлению</span>
+            <select id="tagFilter">
+              <option value="all">Все направления</option>
+            </select>
+          </label>
+        </div>
+
+        <div id="cardsGrid" class="cards-grid" aria-live="polite"></div>
+      </section>
+
+      <section class="request" id="request">
+        <div class="section-head">
+          <h2>Заявка на экскурсию</h2>
+          <p>Заполните поля, и мы подготовим индивидуальное предложение.</p>
+        </div>
+
+        <form id="requestForm" class="request-form" novalidate>
+          <div class="form-grid">
+            <label class="field">
+              <span>Имя</span>
+              <input name="firstName" type="text" required />
+            </label>
+
+            <label class="field">
+              <span>Фамилия</span>
+              <input name="lastName" type="text" required />
+            </label>
+
+            <label class="field field-wide">
+              <span>Экскурсия</span>
+              <select id="excursionSelect" name="excursionId" required>
+                <option value="">Выберите экскурсию</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Количество человек</span>
+              <input id="peopleInput" name="peopleCount" type="number" min="1" value="1" required />
+            </label>
+
+            <label class="field">
+              <span>Итоговая стоимость</span>
+              <input id="totalPrice" name="totalPrice" type="text" readonly />
+            </label>
+
+            <label class="field field-wide">
+              <span>Название отеля или точка Google Maps</span>
+              <input
+                name="pickupPoint"
+                type="text"
+                placeholder="Например: Hilton Garden Inn или https://maps.google.com/..."
+                required
+              />
+            </label>
+
+            <label class="field">
+              <span>Желаемая дата</span>
+              <input name="desiredDate" type="date" required />
+            </label>
+
+            <label class="field">
+              <span>Телефон или ник в Telegram</span>
+              <input
+                name="contact"
+                type="text"
+                placeholder="+7..., @nickname"
+                required
+              />
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn-primary" type="submit">Отправить в Telegram</button>
+            <p id="formNote" class="form-note" aria-live="polite"></p>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <footer class="site-footer" id="contacts">
+      <p>Vibe Trip • Экскурсионные маршруты с заботой о деталях</p>
+      <a id="managerLink" href="#" target="_blank" rel="noreferrer">Связаться с менеджером</a>
+    </footer>
+
+    <dialog id="detailsDialog" class="details-dialog">
+      <article id="detailsContent" class="details-content"></article>
+      <button class="dialog-close" id="dialogClose" aria-label="Закрыть">×</button>
+    </dialog>
+
+    <template id="cardTemplate">
+      <article class="tour-card reveal-up">
+        <img class="tour-card-image" alt="" loading="lazy" />
+        <div class="tour-card-body">
+          <h3 class="tour-card-title"></h3>
+          <p class="tour-card-overview"></p>
+          <div class="tour-card-foot">
+            <p class="tour-card-price"></p>
+            <div class="tour-card-actions">
+              <button class="btn btn-small btn-ghost" type="button" data-action="details">Подробнее</button>
+              <button class="btn btn-small btn-primary" type="button" data-action="select">Выбрать</button>
+            </div>
+          </div>
+        </div>
+      </article>
+    </template>
+
+    <script type="module" src="scripts/app.js"></script>
+  </body>
+</html>
