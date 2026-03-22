@@ -280,12 +280,14 @@ async function onFormSubmit(event) {
 
   if (state.emailService?.endpoint) {
     refs.formNote.textContent = "Отправляем заявку...";
-    const sent = await sendRequestViaEmailService(requestDetails, message);
+    const result = await sendRequestViaEmailService(requestDetails, message);
 
-    if (sent) {
+    if (result.ok) {
       refs.formNote.textContent = "Заявка отправлена. Мы свяжемся с вами в ближайшее время.";
       return;
     }
+
+    refs.formNote.textContent = result.error || "Не удалось отправить заявку на email. Открываем Telegram как резервный канал.";
   }
 
   const telegramUrl = buildTelegramRequestUrl();
@@ -304,31 +306,52 @@ async function onFormSubmit(event) {
 
 async function sendRequestViaEmailService(requestDetails, message) {
   try {
-    const payload = {
-      subject: `Новая заявка на экскурсию: ${requestDetails.excursionTitle}`,
-      message,
-      ...requestDetails
-    };
+    const payload = new FormData();
+    payload.append("_subject", `Новая заявка на экскурсию: ${requestDetails.excursionTitle}`);
+    payload.append("name", `${requestDetails.firstName} ${requestDetails.lastName}`);
+    payload.append("excursion", requestDetails.excursionTitle);
+    payload.append("peopleCount", String(requestDetails.peopleCount));
+    payload.append("totalPrice", requestDetails.totalPrice);
+    payload.append("pickupPoint", requestDetails.pickupPoint);
+    payload.append("desiredDate", requestDetails.desiredDate);
+    payload.append("contact", requestDetails.contact);
+    payload.append("source", "Vibe Trip website form");
+    payload.append("submittedAt", new Date().toISOString());
+    payload.append("message", message);
 
     const response = await fetch(state.emailService.endpoint, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         Accept: "application/json"
       },
-      body: JSON.stringify(payload)
+      body: payload
     });
 
+    const responseData = await response.json().catch(() => null);
+
     if (response.ok) {
-      return true;
+      return { ok: true, error: "" };
     }
 
-    console.error("Email service error", response.status);
-    return false;
+    const apiError = extractEmailServiceError(responseData);
+    console.error("Email service error", response.status, responseData);
+    return { ok: false, error: apiError || "Сервис email отклонил заявку." };
   } catch (error) {
     console.error("Email service unavailable", error);
-    return false;
+    return { ok: false, error: "Сервис email временно недоступен." };
   }
+}
+
+function extractEmailServiceError(responseData) {
+  if (!responseData || typeof responseData !== "object") {
+    return "";
+  }
+
+  if (Array.isArray(responseData.errors) && responseData.errors.length) {
+    return responseData.errors.map((item) => item.message).filter(Boolean).join(" ");
+  }
+
+  return typeof responseData.error === "string" ? responseData.error : "";
 }
 
 function normalizeEmailServiceConfig(config) {
