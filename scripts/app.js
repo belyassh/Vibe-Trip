@@ -3,7 +3,8 @@ const state = {
   filtered: [],
   selectedId: "",
   telegramUsername: "",
-  currency: "USD"
+  currency: "USD",
+  emailService: null
 };
 
 const refs = {
@@ -39,6 +40,7 @@ async function initialize() {
   state.filtered = [...state.excursions];
   state.currency = data.agency?.currency ?? "USD";
   state.telegramUsername = normalizeTelegramUsername(data.telegram?.managerUsername);
+  state.emailService = normalizeEmailServiceConfig(data.emailService);
 
   setupManagerLink();
   populateTagFilter();
@@ -254,17 +256,37 @@ async function onFormSubmit(event) {
 
   const peopleCount = Math.max(1, Number(formData.get("peopleCount")) || 1);
   const totalPrice = excursion.price * peopleCount;
+  const requestDetails = {
+    firstName: formData.get("firstName"),
+    lastName: formData.get("lastName"),
+    excursionTitle: excursion.title,
+    peopleCount,
+    totalPrice: formatPrice(totalPrice),
+    pickupPoint: formData.get("pickupPoint"),
+    desiredDate: formData.get("desiredDate"),
+    contact: formData.get("contact")
+  };
 
   const message = [
     "Привет! Я хочу заказать экскурсию, вот детали моей заявки:",
-    `Имя и фамилия: ${formData.get("firstName")} ${formData.get("lastName")}`,
-    `Экскурсия: ${excursion.title}`,
-    `Количество человек: ${peopleCount}`,
-    `Итоговая стоимость: ${formatPrice(totalPrice)}`,
-    `Отель/точка Google Maps: ${formData.get("pickupPoint")}`,
-    `Желаемая дата: ${formData.get("desiredDate")}`,
-    `Контакт: ${formData.get("contact")}`
+    `Имя и фамилия: ${requestDetails.firstName} ${requestDetails.lastName}`,
+    `Экскурсия: ${requestDetails.excursionTitle}`,
+    `Количество человек: ${requestDetails.peopleCount}`,
+    `Итоговая стоимость: ${requestDetails.totalPrice}`,
+    `Отель/точка Google Maps: ${requestDetails.pickupPoint}`,
+    `Желаемая дата: ${requestDetails.desiredDate}`,
+    `Контакт: ${requestDetails.contact}`
   ].join("\n");
+
+  if (state.emailService?.endpoint) {
+    refs.formNote.textContent = "Отправляем заявку...";
+    const sent = await sendRequestViaEmailService(requestDetails, message);
+
+    if (sent) {
+      refs.formNote.textContent = "Заявка отправлена. Мы свяжемся с вами в ближайшее время.";
+      return;
+    }
+  }
 
   const telegramUrl = buildTelegramRequestUrl();
   window.open(telegramUrl, "_blank", "noopener,noreferrer");
@@ -278,6 +300,48 @@ async function onFormSubmit(event) {
   }
 
   refs.formNote.textContent = "Открываем Telegram с готовым текстом заявки...";
+}
+
+async function sendRequestViaEmailService(requestDetails, message) {
+  try {
+    const payload = {
+      subject: `Новая заявка на экскурсию: ${requestDetails.excursionTitle}`,
+      message,
+      ...requestDetails
+    };
+
+    const response = await fetch(state.emailService.endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (response.ok) {
+      return true;
+    }
+
+    console.error("Email service error", response.status);
+    return false;
+  } catch (error) {
+    console.error("Email service unavailable", error);
+    return false;
+  }
+}
+
+function normalizeEmailServiceConfig(config) {
+  if (!config || typeof config !== "object") {
+    return null;
+  }
+
+  const endpoint = String(config.endpoint || "").trim();
+  if (!endpoint) {
+    return null;
+  }
+
+  return { endpoint };
 }
 
 function buildTelegramRequestUrl() {
