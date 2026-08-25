@@ -1,0 +1,63 @@
+{
+  "agency": { "name": "Niko Phuket", "currency": "THB" },
+  "telegram": { "managerUsername": "hitachi315" },
+  "emailService": { "endpoint": "https://formspree.io/f/meerbjwa" },
+  "excursions": [
+    {
+      "id": "sea-safari", "slug": "phi-phi-speedboat", "category": "sea", "categoryName": "Море",
+      "title": "Острова Пхи-Пхи на скоростном катере", "description": "Maya Bay, Pileh Lagoon, снорклинг и белоснежные пляжи за один день.", "duration": "10–12 часов", "tag": "Бестселлер",
+      "images": ["https://images.unsplash.com/photo-1473116763249-2faaef81ccda?auto=format&fit=crop&w=1200&q=80"],
+      "programs": [
+        { "id": "standard-speedboat", "title": "Стандартная программа Speedboat", "departure": "07:00", "price": 75000, "priceLabel": "Скоростной катер, полный день", "pickupZones": "Патонг, Карон, Ката, Раваи" },
+        { "id": "premium-early-bird", "title": "Premium Early Bird", "departure": "05:30", "price": 92000, "priceLabel": "Ранний выезд, меньше людей", "pickupZones": "Патонг, Карон, Ката, Лагуна, Камала" }
+      ]
+    },
+    {
+      "id": "desert-sunset", "slug": "james-bond-phang-nga", "category": "sea", "categoryName": "Море",
+      "title": "Залив Джеймса Бонда и Пханг Нга", "description": "Классический лонгтейл, каноэ в манграх и мягкий закат над заливом.", "duration": "8–10 часов", "tag": "Медленный день",
+      "images": ["https://images.unsplash.com/photo-1518546305927-5a555bb7020d?auto=format&fit=crop&w=1200&q=80"],
+      "programs": [
+        { "id": "longtail-classic", "title": "Classic Longtail + Canoe", "departure": "08:00", "price": 2520, "priceLabel": "Лонгтейл и каноэ", "pickupZones": "Юг и центр Пхукета" },
+        { "id": "sunset-premium", "title": "Sunset Premium", "departure": "10:00", "price": 3150, "priceLabel": "Поздний старт и закат", "pickupZones": "Патонг, Камала, Бангтао" }
+      ]
+    },
+    {
+      "id": "old-town-story", "slug": "phuket-city-tour", "category": "land", "categoryName": "Земля",
+      "title": "Обзорный Пхукет: храмы, viewpoints и Old Town", "description": "Истории острова, вид на залив и кофе в любимом месте гида.", "duration": "6–8 часов", "tag": "Для первого дня",
+      "images": ["https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1200&q=80"],
+      "programs": [
+        { "id": "group-city-highlights", "title": "Group City Highlights", "departure": "09:00", "price": 1540, "priceLabel": "Групповой маршрут", "pickupZones": "Все пляжи Пхукета" },
+        { "id": "private-flex-route", "title": "Private Flex Route", "departure": "10:00", "price": 4800, "priceLabel": "Индивидуальный маршрут", "pickupZones": "Все пляжи Пхукета" }
+      ]
+    },
+    {
+      "id": "phi-phi-maya-bay-snorkeling", "slug": "phi-phi-maya-bay-snorkeling", "category": "sea", "categoryName": "Море",
+      "title": "Пхи-Пхи: бухта Майя, снорклинг и острова Бамбу", "description": "Три острова, прозрачная вода и время нырять без спешки.", "duration": "8–10 часов", "tag": "Три острова",
+      "images": ["https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80"],
+      "programs": [
+        { "id": "classic-k", "title": "Классический маршрут", "departure": "09:15", "price": 1800, "priceLabel": "Майя, Пхи-Пхи и снорклинг", "pickupZones": "Патонг, Карон, Ката, Раваи, Чалонг" },
+        { "id": "classic-a", "title": "Пхи-Пхи + Бамбу + Майя", "departure": "08:00", "price": 2100, "priceLabel": "Расширенная программа", "pickupZones": "Патонг, Карон, Ката, Лагуна, Камала, Чалонг" },
+        { "id": "speedboat-la", "title": "Экспресс-тур на спидботе", "departure": "09:00", "price": 2400, "priceLabel": "Меньше времени в дороге", "pickupZones": "Патонг, Карон, Ката, Лагуна, Чалонг" }
+      ]
+    },
+    {
+      "id": "phi-phi-early-dawn-maya-bay", "slug": "phi-phi-early-dawn-maya-bay", "category": "sea", "categoryName": "Море",
+      "title": "Ранний Пхи-Пхи: рассвет в бухте Майя", "description": "Первый свет над бухтой, спокойные остановки и меньше туристических лодок.", "duration": "10–11 часов", "tag": "Ранний выезд",
+      "images": ["https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1200&q=80"],
+      "programs": [
+        { "id": "early-standard", "title": "Стандарт", "departure": "05:50", "price": 2300, "priceLabel": "Рассветная программа", "pickupZones": "Патонг, Карон, Ката, Лагуна, Бангтао, Чалонг" },
+        { "id": "early-comfort", "title": "Комфорт", "departure": "05:50", "price": 2500, "priceLabel": "Более комфортный катер", "pickupZones": "Патонг, Карон, Ката, Лагуна, Бангтао, Чалонг" }
+      ]
+    },
+    {
+      "id": "similan-islands", "slug": "similan-islands", "category": "sea", "categoryName": "Море",
+      "title": "Симиланские острова", "description": "Белый песок, гранитные бухты и вода, ради которой стоит встать пораньше.", "duration": "10–11 часов", "tag": "В сезон",
+      "images": ["https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=1200&q=80"],
+      "programs": [
+        { "id": "similan-early-speedboat", "title": "Ранний выезд на спидботе", "departure": "06:00", "price": 2800, "priceLabel": "Первым к островам", "pickupZones": "Патонг, Карон, Ката, Лагуна, Бангтао, Чалонг" },
+        { "id": "similan-standard-speedboat", "title": "Спидбот", "departure": "09:00", "price": 2700, "priceLabel": "Классическая программа", "pickupZones": "Патонг, Карон, Ката, Лагуна, Бангтао, Чалонг" },
+        { "id": "similan-catamaran", "title": "На двухпалубном катамаране", "departure": "09:00", "price": 3100, "priceLabel": "Больше пространства на борту", "pickupZones": "Патонг, Карон, Ката, Лагуна, Бангтао, Чалонг" }
+      ]
+    }
+  ]
+}

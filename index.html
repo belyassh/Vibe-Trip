@@ -36,7 +36,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles/main.css" />
@@ -174,12 +174,6 @@
     </script>
   </head>
   <body>
-    <div class="bg-shapes" aria-hidden="true">
-      <span class="shape shape-a"></span>
-      <span class="shape shape-b"></span>
-      <span class="shape shape-c"></span>
-    </div>
-
     <header class="site-header">
       <a class="brand" href="#home" aria-label="На главную Niko Phuket">
         <img class="brand-mark" src="image.png" alt="Логотип Niko Phuket" loading="lazy" decoding="async" />
@@ -201,44 +195,51 @@
 
       <nav class="main-nav" id="mainNav" aria-label="Главная навигация">
         <button id="mobileMenuClose" class="mobile-menu-close" type="button" aria-label="Закрыть меню">×</button>
-        <a href="#catalog">Каталог</a>
-        <a href="#request">Заявка</a>
-        <a href="#faq">FAQ</a>
+        <a href="#catalog">Впечатления</a>
+        <a href="#how">Как это работает</a>
+        <a href="#journal">Журнал</a>
         <a href="#contacts">Контакты</a>
       </nav>
 
-      <a class="btn btn-ghost" href="#request">Оставить заявку</a>
+      <a class="header-booking btn btn-ghost" href="#request">Мои заявки <span>0</span></a>
     </header>
 
     <div id="mobileMenuBackdrop" class="mobile-menu-backdrop" aria-hidden="true"></div>
 
     <main>
       <section class="hero" id="home">
-        <p class="kicker">Туристическое агентство на Пхукете</p>
-        <h1>Единая витрина на Пхукете: экскурсии, аренда и важные услуги</h1>
-        <p class="hero-copy">
-          Подбирайте туры по Пхукету, аренду транспорта и полезные сервисы: Пхи-Пхи, Симиланы, залив Джеймса Бонда, border run, трансферы и fast track. Смотрите детали и отправляйте заявку за пару шагов.
-        </p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="#catalog">Смотреть каталог</a>
-          <a class="btn btn-ghost" href="#request">Рассчитать стоимость</a>
+        <div class="hero-main-copy">
+          <p class="kicker">Пхукет · Таиланд <span class="hero-dot"></span> 07:42</p>
+          <h1>Остров, который<br><em>остается с тобой.</em></h1>
+          <p class="hero-copy">
+            Камерные поездки, хорошие лодки и люди, которые знают Андаманское море не по путеводителю.
+          </p>
         </div>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#catalog">Выбрать впечатление <span>↘</span></a>
+        </div>
+        <p class="hero-note"><span></span>Made for slow<br>island days</p>
+        <div class="hero-stats"><strong>12</strong><span>маршрутов<br>без толпы</span><strong>4.9</strong><span>средняя<br>оценка гостей</span></div>
+      </section>
+
+      <section class="trust-row" aria-label="Преимущества">
+        <span>01 <b>Местные гиды</b></span><span>02 <b>Группы до 8 человек</b></span><span>03 <b>Без скрытых платежей</b></span><span>04 <b>Поддержка 24/7</b></span>
       </section>
 
       <section class="catalog" id="catalog">
         <div class="section-head">
-          <h2>Единый каталог экскурсий, аренды и услуг</h2>
-          <p>Выбирайте морские, наземные маршруты, аренду и дополнительные услуги в одной витрине.</p>
+          <div><p class="eyebrow">Коллекция / 2026</p><h2>Выберите свой<br><em>ритм острова</em></h2></div>
+          <p>Не экскурсии по расписанию.<br>Дни, к которым хочется вернуться.</p>
         </div>
 
         <div class="category-tabs" id="quickCategoryTabs" role="tablist" aria-label="Быстрый поиск по категориям">
-          <button class="category-tab is-active" type="button" data-tab="all" aria-selected="true">Все</button>
-          <button class="category-tab" type="button" data-tab="sea" aria-selected="false">Морские</button>
-          <button class="category-tab" type="button" data-tab="land" aria-selected="false">Наземные</button>
-          <button class="category-tab" type="button" data-tab="show" aria-selected="false">Шоу</button>
-          <button class="category-tab" type="button" data-tab="border-run" aria-selected="false">Бордеран и визаран</button>
-          <button class="category-tab" type="button" data-tab="rental" aria-selected="false">Аренда</button>
-          <button class="category-tab" type="button" data-tab="other-services" aria-selected="false">Другие услуги</button>
+          <button class="category-tab is-active" type="button" data-tab="all" aria-selected="true">Все <small>12</small></button>
+          <button class="category-tab" type="button" data-tab="sea" aria-selected="false">Море <small>05</small></button>
+          <button class="category-tab" type="button" data-tab="land" aria-selected="false">Земля <small>01</small></button>
+          <button class="category-tab" type="button" data-tab="show" aria-selected="false">Шоу <small>00</small></button>
+          <button class="category-tab" type="button" data-tab="border-run" aria-selected="false">Border Run <small>01</small></button>
+          <button class="category-tab" type="button" data-tab="rental" aria-selected="false">Аренда <small>03</small></button>
+          <button class="category-tab" type="button" data-tab="other-services" aria-selected="false">Услуги <small>04</small></button>
         </div>
 
         <div class="catalog-controls">
@@ -250,6 +251,13 @@
 
         <div id="cardsGrid" class="cards-grid" aria-live="polite"></div>
       </section>
+
+      <section class="how-section" id="how">
+        <div><p class="eyebrow">Ваш день на острове</p><h2>Меньше планов.<br><em>Больше Пхукета.</em></h2></div>
+        <div class="steps"><div class="step"><span>01</span><h3>Выбираете настроение</h3><p>Море, джунгли или вкусный вечер — собрали главное.</p></div><div class="step"><span>02</span><h3>Оставляете заявку</h3><p>Пара деталей, чтобы мы подобрали лучший день и лодку.</p></div><div class="step"><span>03</span><h3>Мы всё подтверждаем</h3><p>Ответим в течение часа и останемся на связи до возвращения.</p></div></div>
+      </section>
+
+      <section class="journal" id="journal"><div class="journal-image"></div><div class="journal-copy"><p class="eyebrow">Из журнала / 04</p><h2>Где встречать<br><em>закат сегодня?</em></h2><p>Три места на острове, где солнце садится прямо в воду, а вокруг достаточно тихо, чтобы это заметить.</p><a href="#journal" class="text-link">Читать заметку <span>↗</span></a></div></section>
 
       <section class="request" id="request">
         <div class="section-head">

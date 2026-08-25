@@ -80,10 +80,10 @@ async function initialize() {
     _searchIndex: buildServiceSearchIndex(item)
   }));
 
-  state.catalogItems = buildUnifiedCatalogItems();
-  state.filtered = [...state.catalogItems];
   state.currency = excursionsData.agency?.currency ?? "USD";
   priceFormatter = createPriceFormatter(state.currency);
+  state.catalogItems = buildUnifiedCatalogItems();
+  state.filtered = [...state.catalogItems];
   state.telegramUsername = normalizeTelegramUsername(excursionsData.telegram?.managerUsername);
   state.emailService = normalizeEmailServiceConfig(excursionsData.emailService);
 

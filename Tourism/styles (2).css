@@ -1,0 +1,90 @@
+let trips = [];
+let config = {};
+
+const grid = document.querySelector('#productGrid');
+const searchInput = document.querySelector('#searchInput');
+const modal = document.querySelector('#bookingModal');
+const selectedTrip = document.querySelector('#selectedTrip');
+const form = document.querySelector('#bookingForm');
+const status = document.querySelector('#formStatus');
+const bookingCount = document.querySelector('#bookingCount');
+let activeFilter = 'all';
+let selected = null;
+
+function formatPrice(price) {
+  return `${Number(price).toLocaleString('ru-RU')} ฿`;
+}
+
+function renderTrips() {
+  const query = searchInput.value.trim().toLowerCase();
+  const visibleTrips = trips.filter((trip) => {
+    const matchesFilter = activeFilter === 'all' || trip.category === activeFilter;
+    const matchesSearch = `${trip.title} ${trip.description}`.toLowerCase().includes(query);
+    return matchesFilter && matchesSearch;
+  });
+  grid.innerHTML = visibleTrips.length ? visibleTrips.map((trip, index) => `
+    <article class="product-card" style="animation-delay:${index * 70}ms">
+      <div class="product-visual"><img src="${trip.images[0]}" alt="${trip.title}" loading="lazy"><span class="product-tag">${trip.tag}</span></div>
+      <div class="product-info"><div class="product-meta"><span>${trip.categoryName}</span><span>${trip.duration}</span></div><h3>${trip.title}</h3><p>${trip.description}</p><div class="card-footer"><span class="price">от ${formatPrice(trip.programs[0].price)} <small>/ человек</small></span><button class="book-button" type="button" data-trip-id="${trip.id}">Забронировать <span>↗</span></button></div></div>
+    </article>`).join('') : '<p class="empty-state">Ничего не нашли. Попробуйте другой запрос.</p>';
+  document.querySelectorAll('[data-trip-id]').forEach((button) => button.addEventListener('click', () => openBooking(button.dataset.tripId)));
+}
+
+function populatePrograms(trip) {
+  programSelect.innerHTML = trip.programs.map((program) => `<option value="${program.id}">${program.title} · ${program.departure} · ${formatPrice(program.price)}</option>`).join('');
+  updatePickupOptions();
+}
+
+function updatePickupOptions() {
+  const program = selected?.programs.find((item) => item.id === programSelect.value);
+  if (!program) return;
+  pickupSelect.innerHTML = program.pickupZones.split(',').map((zone) => `<option value="${zone.trim()}">${zone.trim()}</option>`).join('');
+  form.elements.price.value = program.price;
+}
+
+function openBooking(tripId = '') {
+  selected = trips.find((trip) => trip.id === tripId) || null;
+  selectedTrip.textContent = selected?.title || 'Выберите впечатление в каталоге';
+  form.elements.trip.value = selected?.title || '';
+  if (selected) populatePrograms(selected);
+  status.textContent = '';
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  form.elements.name.focus();
+}
+function closeBooking() { modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); }
+
+document.querySelectorAll('.filter-tab').forEach((tab) => tab.addEventListener('click', () => {
+  document.querySelector('.filter-tab.active').classList.remove('active');
+  tab.classList.add('active'); activeFilter = tab.dataset.filter; renderTrips();
+}));
+searchInput.addEventListener('input', renderTrips);
+programSelect.addEventListener('change', updatePickupOptions);
+document.querySelector('[data-open-booking]').addEventListener('click', () => openBooking(selected?.id));
+document.querySelector('[data-close-booking]').addEventListener('click', closeBooking);
+modal.addEventListener('click', (event) => { if (event.target === modal) closeBooking(); });
+document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeBooking(); });
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const data = new FormData(form);
+  const payload = new FormData();
+  payload.append('_subject', `Новая заявка: ${data.get('trip')}`);
+  payload.append('Имя', data.get('name')); payload.append('Контакт', data.get('contact'));
+  payload.append('Дата', data.get('date')); payload.append('Гостей', data.get('guests'));
+  payload.append('Программа', data.get('program')); payload.append('Зона трансфера', data.get('pickup'));
+  payload.append('Цена', `${data.get('price')} THB`); payload.append('Комментарий', data.get('message') || '-');
+  status.textContent = 'Отправляем запрос...';
+  try {
+    const response = await fetch(config.emailService.endpoint, { method: 'POST', headers: { Accept: 'application/json' }, body: payload });
+    if (!response.ok) throw new Error('Email service rejected request');
+    bookingCount.textContent = '1'; status.textContent = 'Запрос отправлен. Менеджер свяжется с вами в ближайшее время.'; form.reset();
+  } catch (error) {
+    const fallback = `Заявка: ${data.get('trip')}\nИмя: ${data.get('name')}\nКонтакт: ${data.get('contact')}\nДата: ${data.get('date')}\nГостей: ${data.get('guests')}\nПрограмма: ${data.get('program')}\nЗона трансфера: ${data.get('pickup')}`;
+    window.open(`https://t.me/${config.telegram.managerUsername}?text=${encodeURIComponent(fallback)}`, '_blank', 'noopener,noreferrer');
+    status.textContent = 'Email недоступен. Открыт Telegram для отправки заявки.';
+  }
+});
+
+fetch('excursions-data.json').then((response) => response.json()).then((data) => {
+  config = data; trips = data.excursions; renderTrips();
+}).catch(() => { grid.innerHTML = '<p class="empty-state">Каталог временно недоступен. Запустите сайт через локальный сервер.</p>'; });
